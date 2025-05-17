@@ -50,5 +50,4 @@ async def create_tables():
         await conn.run_sync(Base.metadata.create_all)
 
 
-if __name__ == "__main__":
-    asyncio.run(create_tables())
+asyncio.run(create_tables())
