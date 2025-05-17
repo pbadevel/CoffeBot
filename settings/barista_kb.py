@@ -23,6 +23,12 @@ def main():
         width=1
     ).as_markup()
 
+def back_to_main():
+    return InlineKeyboardBuilder().row(
+        InlineKeyboardButton(text='Назад', callback_data='barista_back'),
+        width=1
+    ).as_markup()
+
 
 def confirm_a_cup(user_id):
     return InlineKeyboardBuilder().row(

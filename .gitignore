@@ -3,3 +3,4 @@ venv/*
 */__pycache__/*
 database/db.sqlite3
 init
+test.py

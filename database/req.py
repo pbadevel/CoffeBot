@@ -5,7 +5,7 @@ from sqlalchemy import select, update
 from sqlalchemy.sql import exists
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError, NoResultFound
 
-from typing import Optional
+from typing import Optional, List
 
 import logging as lg
 
@@ -14,7 +14,7 @@ import logging as lg
 
 async def add_user(user_id: int, **kw) -> Optional[User]:
     '''
-    Добавляет нового пользователя в базу данных.
+    Add new user in database
 
     Args:
         user_id: required (int)
@@ -42,16 +42,8 @@ async def add_user(user_id: int, **kw) -> Optional[User]:
             return new_user
             
     except IntegrityError as e:
-        # await session.rollback()
-        # print(f"Ошибка целостности: {e}")
-        # Если пользователь уже существует, можно вернуть существующего
         existing_user = await session.get(User, kw['user_id'])
         return existing_user
-        
-    except SQLAlchemyError as e:
-        # await session.rollback()
-        print(f"Ошибка базы данных: {e}")
-        return None
         
     except Exception as e:
         print(f"Неожиданная ошибка: {e}")
@@ -68,7 +60,7 @@ async def add_user(user_id: int, **kw) -> Optional[User]:
 
 async def get_user_by_id(user_id: int) -> Optional[User]:
     '''
-    Добавляет нового пользователя в базу данных.
+    Get user by user_id from database
 
     Args:
         user_id: required (int)
@@ -87,10 +79,26 @@ async def get_user_by_id(user_id: int) -> Optional[User]:
         return None
 
 
+async def get_users() -> Optional[List[User]]:
+    '''
+    Get all users
+    '''
+    try:
+        async with async_session() as session:
+            result = await session.execute(
+                select(User)
+            )
+            return result.scalars().all()
+        
+    except NoResultFound:
+        return None
+
+
+
 async def user_exists(user_id: int) -> Optional[User]:
     '''
-    Добавляет нового пользователя в базу данных.
-
+    Checks if user exists
+    
     Args:
         user_id: required (int)
     Return:
@@ -107,6 +115,14 @@ async def user_exists(user_id: int) -> Optional[User]:
 
 
 async def update_user(user_id: int, **data) -> Optional[User]:
+    '''
+    Update user in database by user_id
+    
+    Args:
+        user_id: required (int)
+    Return:
+        database.models.User object
+    '''
     try:
         async with async_session() as session:
             user = await session.get(User, user_id)

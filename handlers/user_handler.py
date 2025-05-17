@@ -37,38 +37,80 @@ async def start(message: types.Message, command: CommandObject):
     
 
     if command.args:
-        # QR CODE HERE
-        
-        if user.role != UserRole.barista:
-            await message.answer(
-                text = 'Вы не являетесь'\
-                       'баристой кофейни'\
-                       'если это не так -'\
-                       ' свяжитесь с поддержкой ',
-                reply_markup=user_kb.back_to_main()
-            )\
-            \
-             if user.role == UserRole.user else \
-            \
-            await message.answer(
-                text = 'Вы не являетесь'\
-                       'баристой кофейни'\
-                       'если это не так -'\
-                       ' свяжитесь с поддержкой ',
-                reply_markup=admin_kb.back_to_main()
-            )
-            return
-        
         try:
-            user_id = int(decode_payload(command.args))
+            action, data = decode_payload(command.args).split('_')
+            user_id = int(data)
         except:
-            await message.answer('Не правильный QR-код!')
+            await message.answer(lexicon.WRONG_QR_TEXT)
             return
         
+        if action == 'ref':
+            referrer = await req.get_user_by_id(user_id)
+            all_referrals_ids = []
+            [[all_referrals_ids.append(int(j)) for j in i.referral_ids.split(',') if j!=''] for i in await req.get_users() if i.referral_ids]
+            
+            if referrer.user_id == message.from_user.id:
+                await message.answer(lexicon.CANT_INVITE_YOURSELF_TEXT)
+                return
+            elif referrer.referral_ids and (message.from_user.id in all_referrals_ids):
+                await message.answer(
+                    text=lexicon.ALREADY_REF_TEXT.format(
+                        name = message.from_user.username or message.from_user.full_name
+                    )
+                )
+                return
+            
+            if not referrer.referral_ids:
+                referrer.referral_ids = ''
+
+            # Update referrer
+            await req.update_user(
+                user_id = referrer.user_id,
+                cups = referrer.cups + 1,
+                referral_ids = referrer.referral_ids + str(message.from_user.id) + ','
+            )
+
+            await message.bot.send_message(
+                chat_id = referrer.user_id,
+                text = lexicon.REFERRER_TEXT.format(
+                    name=message.from_user.username or message.from_user.full_name
+                )
+            )
+
+            # Update new user
+            await req.update_user(
+                user_id = message.from_user.id,
+                referrer_id=referrer.user_id
+            )
+            
+            await message.answer(
+                text = lexicon.REFERRAL_TEXT.format(
+                    name = message.from_user.username or message.from_user.full_name
+                ),
+                reply_markup = user_kb.main()
+            )
+
+            return
+
+
+
+        if user.role != UserRole.barista:
+            answer_kb = user_kb.back_to_main() if user.role == UserRole.user\
+                  else admin_kb.back_to_main()
+ 
+            await message.answer(
+                text = lexicon.NOT_BARISTA_TEXT.format(
+                    support = config.SUPPORT_USERNAME
+                ),
+                reply_markup=answer_kb
+            )
+
+            return
+                
         try:
             current_user = await req.get_user_by_id(user_id)
         except:
-            await message.answer('Данного пользователя нет в боте!\nПользователь должен <b>обязательно</b> нажать на кнопку "START"')
+            await message.answer(lexicon.NO_SUCH_USER_TEXT)
             return
         
 
@@ -113,7 +155,8 @@ async def start(message: types.Message, command: CommandObject):
 
 @router.callback_query(F.data.startswith('user_'))
 async def user_handler(cb: types.CallbackQuery):
-    
+    await cb.answer()
+
     action = cb.data.split('_')[-1]
 
     # Send Qr
@@ -121,12 +164,12 @@ async def user_handler(cb: types.CallbackQuery):
         qr = await ProjectUtils.generate_qrcode(
             payload = await create_start_link(
                 bot = cb.bot,
-                payload=str(cb.from_user.id),
+                payload='qr_'+str(cb.from_user.id),
                 encode=True
                 )
         )
 
-        await cb.message.answer_photo(photo=qr, reply_markup=user_kb.back_to_main())
+        await cb.message.answer_photo(photo=qr, reply_markup=user_kb.back_to_main_from_qr())
 
     # Rules
     elif action == 'rules':
@@ -138,10 +181,44 @@ async def user_handler(cb: types.CallbackQuery):
     # Referral system
     elif action == 'ref':
         try:
-            await cb.message.edit_text(lexicon.REFERRAL_SYSTEM_TEXT, reply_markup=user_kb.back_to_main())
+            await cb.message.edit_text(
+                text=lexicon.REFERRAL_SYSTEM_TEXT.format(
+                    referral_link = await create_start_link(
+                        bot=cb.bot,
+                        payload="ref_"+str(cb.from_user.id),
+                        encode=True
+                    )
+                ), reply_markup=user_kb.back_to_main())
         except:
             await cb.message.answer(lexicon.REFERRAL_SYSTEM_TEXT, reply_markup=user_kb.back_to_main())
         
+    # Show User Profile
+    elif action == 'profile':
+        user = await req.get_user_by_id(cb.from_user.id)
+        try:
+            await cb.message.edit_text(
+                text=lexicon.USER_PROFILE_TEXT.format(
+                    name = user.fullname,
+                    username = f"[@{user.username}]" if user.username else '',
+                    cups = user.cups,
+                    referrals = len([i for i in user.referral_ids.split(',') if i!='']) if user.referral_ids else 0
+                ),
+                reply_markup=user_kb.back_to_main()
+            )
+        except:
+            await cb.message.answer(
+                text=lexicon.USER_PROFILE_TEXT.format(
+                    name = user.fullname,
+                    username = f"[@{user.username}]" if user.username else '',
+                    cups = user.cups,
+                    referrals = len([i for i in user.referral_ids.split(',') if i!='']) if user.referral_ids else 0
+                ),
+                reply_markup=user_kb.back_to_main()
+            )
+    # To Delete QR
+    elif action == 'backqr':
+        await cb.message.delete()
+
     # Back Button
     else:
         try:
