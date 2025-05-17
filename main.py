@@ -9,15 +9,16 @@ import asyncio
 
 
 
-from handlers import admin_handler, user_handler
+from handlers import admin_handler, user_handler, barista_handler
 
 
 # testimageid: AgACAgQAAxkBAAIBUmgepvOdW8eKStDcirfnZtKOY98bAALhxDEbsST4UDhSxmDukigqAQADAgADeQADNgQ
 
 async def main():
 
-    config.dp.include_router(admin_handler.router)
     config.dp.include_router(user_handler.router)
+    config.dp.include_router(barista_handler.router)
+    config.dp.include_router(admin_handler.router)
 
     print(config.ADMIN_IDS)
     

@@ -17,3 +17,10 @@ def main():
         InlineKeyboardButton(text='Рассылка', callback_data='admin_send'),
         width=1
     ).as_markup()
+
+
+def back_to_main():
+    return InlineKeyboardBuilder().row(
+        InlineKeyboardButton(text='Назад', callback_data='admin_back'),
+        width=1
+    ).as_markup()

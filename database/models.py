@@ -1,8 +1,7 @@
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
-from sqlalchemy import ForeignKey, String, BigInteger, Boolean, DateTime, Integer, Text, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Table, Column
+from sqlalchemy import ForeignKey, String, BigInteger, Boolean, DateTime, Integer
+from sqlalchemy.orm import Mapped, mapped_column
 
 
 import asyncio
@@ -33,14 +32,14 @@ class User(Base):
     user_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     username: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     fullname: Mapped[str] = mapped_column(String(200), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now())
 
     cups: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
     referrer_id: Mapped[int] = mapped_column(Integer, nullable=True)
     referral_ids: Mapped[str] = mapped_column(String, nullable=True)
 
-    role: Mapped[ProjectEnums.UserRoleEnum] = mapped_column(String(50), nullable=False, default=ProjectEnums.UserRoleEnum.user.value)
+    role: Mapped[ProjectEnums.UserRole] = mapped_column(String(50), nullable=False, default=ProjectEnums.UserRole.user)
 
 
 

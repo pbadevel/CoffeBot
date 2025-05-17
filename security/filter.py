@@ -2,7 +2,7 @@ from aiogram.filters import Filter
 from aiogram.types import Message
 
 from settings import config
-from utils.ProjectEnums import UserRoleEnum
+from utils.ProjectEnums import UserRole
 
 from database import req
 
@@ -18,7 +18,7 @@ class BaristaProtect(Filter):
         user = await req.get_user_by_id(message.from_user.id)
         
         if user:
-            return user.role == UserRoleEnum.barista.value
+            return user.role == UserRole.barista
         
         return False
 

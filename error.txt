@@ -41,15 +41,20 @@ Traceback (most recent call last):
   File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/venv/lib/python3.12/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
     return await wrapped()
            ^^^^^^^^^^^^^^^
-  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/handlers/user_handler.py", line 17, in start
-    user = await req.get_user_by_id(message.from_user.id)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/database/req.py", line 84, in get_user_by_id
-    return result.scalars().one()
-           ^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/venv/lib/python3.12/site-packages/sqlalchemy/engine/result.py", line 1815, in one
-    return self._only_one_row(
-           ^^^^^^^^^^^^^^^^^^^
-  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/venv/lib/python3.12/site-packages/sqlalchemy/engine/result.py", line 760, in _only_one_row
-    raise exc.NoResultFound(
-sqlalchemy.exc.NoResultFound: No row was found when one was required
+  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/handlers/barista_handler.py", line 50, in handle_confirm_a_cup
+    await cb.message.edit_text('')
+  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/venv/lib/python3.12/site-packages/aiogram/methods/base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/venv/lib/python3.12/site-packages/aiogram/client/bot.py", line 478, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/venv/lib/python3.12/site-packages/aiogram/client/session/base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/venv/lib/python3.12/site-packages/aiogram/client/session/aiohttp.py", line 185, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "/home/pba/Desktop/work/work/WorkWithAnton/CoffeBot/venv/lib/python3.12/site-packages/aiogram/client/session/base.py", line 120, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message text is empty

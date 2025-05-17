@@ -5,3 +5,12 @@ class UserRoleEnum(Enum):
     admin = 'admin'
     barista = 'barista'
     user = 'user'
+
+
+@dataclass
+class UserRole:
+    admin = UserRoleEnum.admin.value
+    barista = UserRoleEnum.barista.value
+    user = UserRoleEnum.user.value
+
+
