@@ -115,15 +115,13 @@ async def start(message: types.Message, command: CommandObject):
 
 
 
-        if user.role != UserRole.barista:
-            answer_kb = user_kb.back_to_main() if user.role == UserRole.user\
-                  else admin_kb.back_to_main()
+        if user.role == UserRole.user:
  
             await message.answer(
                 text = lexicon.NOT_BARISTA_TEXT.format(
                     support = config.SUPPORT_USERNAME
                 ),
-                reply_markup=answer_kb
+                reply_markup=user_kb.back_to_main() 
             )
 
             return

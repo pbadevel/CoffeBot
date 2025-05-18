@@ -243,15 +243,24 @@ async def get_id_tg_personal(message: types.Message, state: FSMContext):
     edit_role = data['edit_role']
     role = "<b>БАРИСТА</b>"
     
-    await req.update_user(
-        user_id=tg_id_personal,
-        role=edit_role
-    )
+    # await req.update_user(
+    #     user_id=tg_id_personal,
+    #     role=edit_role
+    # )
     user = await req.get_user_by_id(user_id=tg_id_personal)
     if user:
-        await message.answer(text=f'Пользователь {"@"+user.username if user.username else user.fullname} добавлен в список {role}', reply_markup=admin_kb.back_to_main())
-        await state.set_state(default_state)
-        await state.clear()
+        try:
+            await message.edit_text(
+                text=f'Для добавления пользователя в список {role},'\
+                    'отправьте ему пригласительную ссылку:\n'\
+                    f'<code>{await create_start_link(bot=message.bot, payload=edit_role+"_"+str(user.user_id), encode=True)}</code>',
+                reply_markup=admin_kb.back_to_main())
+        except:
+            await message.answer(
+                text=f'Для добавления пользователя в список {role},'\
+                    'отправьте ему пригласительную ссылку:\n'\
+                    f'<code>{await create_start_link(bot=message.bot, payload=edit_role+"_"+str(user.user_id), encode=True)}</code>',
+                reply_markup=admin_kb.back_to_main())
     else:
         await message.answer(text=f'Пользователь c id={tg_id_personal} в базе данных не найден, попробуйте еще раз:', reply_markup=admin_kb.back_to_main())
         
@@ -290,19 +299,8 @@ async def process_add_admin_list(callback: types.CallbackQuery, state: FSMContex
 
     role = "БАРИСТА"
 
-    # await req.update_user(user_id=tg_id, role=edit_role)
-    try:
-        await callback.message.edit_text(
-            text=f'Для добавления пользователя в список {role},'\
-                'отправьте ему пригласительную ссылку:\n'\
-                f'<code>{await create_start_link(bot=callback.bot, payload=edit_role+"_"+str(tg_id), encode=True)}</code>',
-            reply_markup=admin_kb.back_to_main())
-    except:
-        await callback.message.answer(
-            text=f'Для добавления пользователя в список {role},'\
-                'отправьте ему пригласительную ссылку:\n'\
-                f'<code>{await create_start_link(bot=callback.bot, payload=edit_role+"_"+str(tg_id), encode=True)}</code>',
-            reply_markup=admin_kb.back_to_main())
+    await req.update_user(user_id=tg_id, role=edit_role)
+    
     
 
 

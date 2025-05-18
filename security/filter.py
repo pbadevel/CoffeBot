@@ -24,7 +24,7 @@ class BaristaProtect(filters.Filter):
         user = await req.get_user_by_id(message.from_user.id)
         
         if user:
-            return user.role == UserRole.barista
+            return user.role == UserRole.barista or user.role == UserRole.admin
         
         return False
 
