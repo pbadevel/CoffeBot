@@ -40,7 +40,7 @@ class User(Base):
     referral_ids: Mapped[str] = mapped_column(String, nullable=True)
 
     role: Mapped[ProjectEnums.UserRole] = mapped_column(String(50), nullable=False, default=ProjectEnums.UserRole.user)
-
+    is_first_cup: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
 
 

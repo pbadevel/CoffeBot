@@ -44,6 +44,27 @@ async def start(message: types.Message, command: CommandObject):
             await message.answer(lexicon.WRONG_QR_TEXT)
             return
         
+        if action == UserRole.barista:
+            new_barista = await req.update_user(
+                user_id=user_id,
+                role=UserRole.barista
+                )
+            if new_barista:
+                for admin_id in config.ADMIN_IDS:
+                    try:
+                        await message.bot.send_message(
+                            chat_id=admin_id,
+                            text=f'Новый <b>БАРИСТА</b> - {"@"+new_barista.username if new_barista.username else new_barista.fullname}!'
+                        )
+                    except:
+                        pass
+            
+            await message.answer('Поздравляем! Вам выдали роль БАРИСТА!\n\nЗапустите бота с новыми функциями!', 
+                                 reply_markup=barista_kb.main())
+            return
+        
+
+
         if action == 'ref':
             referrer = await req.get_user_by_id(user_id)
             all_referrals_ids = []
@@ -55,7 +76,7 @@ async def start(message: types.Message, command: CommandObject):
             elif referrer.referral_ids and (message.from_user.id in all_referrals_ids):
                 await message.answer(
                     text=lexicon.ALREADY_REF_TEXT.format(
-                        name = message.from_user.username or message.from_user.full_name
+                        name = "@"+message.from_user.username or message.from_user.full_name
                     )
                 )
                 return
@@ -66,14 +87,14 @@ async def start(message: types.Message, command: CommandObject):
             # Update referrer
             await req.update_user(
                 user_id = referrer.user_id,
-                cups = referrer.cups + 1,
+                # cups = referrer.cups + 1,
                 referral_ids = referrer.referral_ids + str(message.from_user.id) + ','
             )
 
             await message.bot.send_message(
                 chat_id = referrer.user_id,
                 text = lexicon.REFERRER_TEXT.format(
-                    name=message.from_user.username or message.from_user.full_name
+                    name="@"+message.from_user.username if message.from_user.username else message.from_user.full_name
                 )
             )
 
@@ -85,7 +106,7 @@ async def start(message: types.Message, command: CommandObject):
             
             await message.answer(
                 text = lexicon.REFERRAL_TEXT.format(
-                    name = message.from_user.username or message.from_user.full_name
+                    name = "@"+message.from_user.username if message.from_user.username else message.from_user.full_name
                 ),
                 reply_markup = user_kb.main()
             )
@@ -106,7 +127,9 @@ async def start(message: types.Message, command: CommandObject):
             )
 
             return
-                
+
+
+
         try:
             current_user = await req.get_user_by_id(user_id)
         except:
@@ -117,7 +140,7 @@ async def start(message: types.Message, command: CommandObject):
         if current_user.cups >= 10:
             await message.answer(
                 text = lexicon.MANY_CUPS_TEXT.format(
-                    name = current_user.username or current_user.fullname,
+                    name = "@"+current_user.username if current_user.username else current_user.fullname,
                     cups = current_user.cups
                 ),
                 reply_markup = barista_kb.choose_cup_action(user_id = user_id)
@@ -127,7 +150,7 @@ async def start(message: types.Message, command: CommandObject):
 
         await message.answer(
             text = lexicon.ADD_A_CUP_TEXT.format(
-                name = current_user.username or current_user.fullname,
+                name = "@"+current_user.username if current_user.username else current_user.fullname,
                 cups = current_user.cups
             ),
             reply_markup = barista_kb.confirm_a_cup(user_id = user_id)
