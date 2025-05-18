@@ -295,13 +295,13 @@ async def process_add_admin_list(callback: types.CallbackQuery, state: FSMContex
         await callback.message.edit_text(
             text=f'Для добавления пользователя в список {role},'\
                 'отправьте ему пригласительную ссылку:\n'\
-                f'<code>{await create_start_link(bot=callback.bot, payload=edit_role+'_'+str(tg_id), encode=True)}</code>',
+                f'<code>{await create_start_link(bot=callback.bot, payload=edit_role+"_"+str(tg_id), encode=True)}</code>',
             reply_markup=admin_kb.back_to_main())
     except:
         await callback.message.answer(
             text=f'Для добавления пользователя в список {role},'\
                 'отправьте ему пригласительную ссылку:\n'\
-                f'<code>{await create_start_link(bot=callback.bot, payload=edit_role+'_'+str(tg_id), encode=True)}</code>',
+                f'<code>{await create_start_link(bot=callback.bot, payload=edit_role+"_"+str(tg_id), encode=True)}</code>',
             reply_markup=admin_kb.back_to_main())
     
 
