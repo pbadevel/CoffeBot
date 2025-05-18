@@ -4,12 +4,14 @@ from database import req
 
 from settings import lexicon, barista_kb
 
+from security import filter
+
 
 router = Router()
 
 
 
-@router.callback_query(F.data.startswith('barista_'))
+@router.callback_query(F.data.startswith('barista_'), filter.BaristaProtect())
 async def handle_barista(cb: types.CallbackQuery):
     await cb.answer()
 
@@ -42,7 +44,7 @@ async def handle_barista(cb: types.CallbackQuery):
 
 
 
-@router.callback_query(F.data.startswith('addAcup_'))
+@router.callback_query(F.data.startswith('addAcup_'), filter.BaristaProtect())
 async def handle_confirm_a_cup(cb: types.CallbackQuery):
     await cb.answer()
 

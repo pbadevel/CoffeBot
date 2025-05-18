@@ -7,6 +7,7 @@ from aiogram.types import (
     KeyboardButton
 )
 
+from settings import config
 
 
 
@@ -17,6 +18,7 @@ def main():
         InlineKeyboardButton(text='Профиль', callback_data='user_profile'),
         InlineKeyboardButton(text='Система лояльности', callback_data='user_rules'),
         InlineKeyboardButton(text='Реферальная система', callback_data='user_ref'),
+        InlineKeyboardButton(text='Поддержка', url=f'{config.SUPPORT_USERNAME}.t.me'),
         width=1
     ).as_markup()
 
