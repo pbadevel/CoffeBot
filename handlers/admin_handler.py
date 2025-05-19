@@ -242,7 +242,7 @@ async def get_id_tg_personal(message: types.Message, state: FSMContext):
     data = await state.get_data()
     edit_role = data['edit_role']
     role = "<b>БАРИСТА</b>"
-    
+    await state.clear()
     # await req.update_user(
     #     user_id=tg_id_personal,
     #     role=edit_role
