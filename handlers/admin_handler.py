@@ -2,7 +2,7 @@ from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.deep_linking import create_start_link
 
-from settings.AdminStates import Personal, Mailing, default_state
+from settings.AdminStates import Personal, Mailing
 from settings import admin_kb, lexicon
 
 from utils.ProjectEnums import UserRole
@@ -225,8 +225,7 @@ async def process_personal_add(callback: types.CallbackQuery, state: FSMContext)
     await state.set_state(Personal.id_tg_personal)
 
 
-@router.message(Personal.id_tg_personal)
-@router.message(F.text)
+@router.message(Personal.id_tg_personal, F.text)
 async def get_id_tg_personal(message: types.Message, state: FSMContext):
     """
     Получаем id телеграм для добавления в список персонала

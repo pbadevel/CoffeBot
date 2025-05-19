@@ -14,8 +14,8 @@ import asyncio
 
 
 # not in use
-# class AdminProtect(Filter):
-#     async def __call__(self, message: Message):
+# class AdminProtect(filters.Filter):
+#     async def __call__(self, message: types.Message):
 #         return message.from_user.id in config.ADMIN_IDS
 
 
