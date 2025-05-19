@@ -135,7 +135,7 @@ async def start(message: types.Message, command: CommandObject):
             return
         
 
-        if current_user.cups >= 10:
+        if current_user.cups >= 9:
             await message.answer(
                 text = lexicon.MANY_CUPS_TEXT.format(
                     name = "@"+current_user.username if current_user.username else current_user.fullname,
@@ -222,6 +222,7 @@ async def user_handler(cb: types.CallbackQuery):
                     name = user.fullname,
                     username = f"[@{user.username}]" if user.username else '',
                     cups = user.cups,
+                    cups_remain = 9 - user.cups if user.cups < 10 else 0,
                     referrals = len([i for i in user.referral_ids.split(',') if i!='']) if user.referral_ids else 0
                 ),
                 reply_markup=user_kb.back_to_main()
