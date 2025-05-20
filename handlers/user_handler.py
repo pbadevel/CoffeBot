@@ -45,7 +45,7 @@ async def start(message: types.Message, command: CommandObject):
             return
         
         if action == 'role': 
-            role = ProjectUtils.decode_phrase(user_id)
+            role = user_id
             new_barista = None
 
             if message.from_user.id in config.ADMIN_IDS:
