@@ -213,9 +213,8 @@ async def process_select_action(callback: types.CallbackQuery, state: FSMContext
 
 @router.callback_query(F.data == 'personal_add')
 async def process_personal_add(callback: types.CallbackQuery, state: FSMContext) -> None:
-
-    data = await state.get_data()
-    edit_role = data['edit_role']
+    edit_role = UserRole.barista
+    # edit_role = data['edit_role']
     role = "<b>БАРИСТА</b>"
 
     try:
