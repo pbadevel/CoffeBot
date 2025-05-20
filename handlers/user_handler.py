@@ -38,6 +38,8 @@ async def start(message: types.Message, command: CommandObject):
 
     if command.args:
         try:
+            import logging
+            logging.info(f'PAYLOAD: {decode_payload(command.args)}')
             action, data = decode_payload(command.args).split('_')
             user_id = int(data)
         except:
