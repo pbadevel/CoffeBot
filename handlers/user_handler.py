@@ -53,7 +53,7 @@ async def start(message: types.Message, command: CommandObject):
             return
         
         if action == 'role': 
-            role = user_id
+            role = data
             new_barista = None
 
             if message.from_user.id in config.ADMIN_IDS:
