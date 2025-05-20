@@ -44,11 +44,20 @@ async def start(message: types.Message, command: CommandObject):
             await message.answer(lexicon.WRONG_QR_TEXT)
             return
         
-        if action == UserRole.barista:
-            new_barista = await req.update_user(
-                user_id=user_id,
-                role=UserRole.barista
+        if action == 'role': 
+            role = ProjectUtils.decode_phrase(user_id)
+            new_barista = None
+
+            if message.from_user.id in config.ADMIN_IDS:
+                await message.answer('Вы являетесь админом, но вы можете считывать qr так же как и <b>БАРИСТА</b>')
+                return
+
+            if role == UserRole.barista:
+                new_barista = await req.update_user(
+                    user_id=message.from_user.id,
+                    role=UserRole.barista
                 )
+            
             if new_barista:
                 for admin_id in config.ADMIN_IDS:
                     try:

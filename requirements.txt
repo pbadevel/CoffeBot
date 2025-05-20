@@ -7,6 +7,8 @@ aiosqlite==0.21.0
 annotated-types==0.7.0
 attrs==25.3.0
 certifi==2025.4.26
+cffi==1.17.1
+cryptography==45.0.2
 environs==14.1.1
 frozenlist==1.6.0
 greenlet==3.2.2
@@ -15,6 +17,7 @@ magic-filter==1.0.12
 marshmallow==4.0.0
 multidict==6.4.3
 propcache==0.3.1
+pycparser==2.22
 pydantic==2.11.4
 pydantic_core==2.33.2
 python-dotenv==1.1.0

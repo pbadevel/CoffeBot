@@ -218,50 +218,66 @@ async def process_personal_add(callback: types.CallbackQuery, state: FSMContext)
     edit_role = data['edit_role']
     role = "<b>БАРИСТА</b>"
 
-    await callback.message.edit_text(text=f'Пришлите Telegram ID пользователя для назначения его {role}.\n\n'
-                                          f'❗️<b>Пользователь должен запустить бота</b>❗️\n\n'
-                                          f'Получить Telegram ID пользователя можно при помощи бота: '
-                                          f'@getmyid_bot или @username_to_id_bot', reply_markup=admin_kb.back_to_main())
-    await state.set_state(Personal.id_tg_personal)
+    try:
+        await callback.message.edit_text(
+            text=f'Для добавления пользователя в список {role},'\
+                'отправьте ему пригласительную ссылку:\n'\
+                f'<code>{await create_start_link(bot=callback.bot, payload="role_"+ProjectUtils.encode_phrase(edit_role), encode=True)}</code>',
+            reply_markup=admin_kb.back_to_main())
+    except:
+        await callback.message.answer(
+            text=f'Для добавления пользователя в список {role},'\
+                'отправьте ему пригласительную ссылку:\n'\
+                f'<code>{await create_start_link(bot=callback.bot, payload="role_"+ProjectUtils.encode_phrase(edit_role), encode=True)}</code>',
+            reply_markup=admin_kb.back_to_main())
+        
 
 
-@router.message(Personal.id_tg_personal, F.text)
-async def get_id_tg_personal(message: types.Message, state: FSMContext):
-    """
-    Получаем id телеграм для добавления в список персонала
-    :param message:
-    :param state:
-    :return:
-    """
-    if not message.text.isdigit():
-        await message.answer('ID пользователя - это число!\nВведите еще раз:')
-        return
+
+    # await callback.message.edit_text(text=f'Пришлите Telegram ID пользователя для назначения его {role}.\n\n'
+    #                                       f'❗️<b>Пользователь должен запустить бота</b>❗️\n\n'
+    #                                       f'Получить Telegram ID пользователя можно при помощи бота: '
+    #                                       f'@getmyid_bot или @username_to_id_bot', reply_markup=admin_kb.back_to_main())
+    # await state.set_state(Personal.id_tg_personal)
+
+
+# @router.message(Personal.id_tg_personal, F.text)
+# async def get_id_tg_personal(message: types.Message, state: FSMContext):
+#     """
+#     Получаем id телеграм для добавления в список персонала
+#     :param message:
+#     :param state:
+#     :return:
+#     """
+#     if not message.text.isdigit():
+#         await message.answer('ID пользователя - это число!\nВведите еще раз:')
+#         return
     
-    tg_id_personal = int(message.text)
-    data = await state.get_data()
-    edit_role = data['edit_role']
-    role = "<b>БАРИСТА</b>"
-    await state.clear()
-    # await req.update_user(
-    #     user_id=tg_id_personal,
-    #     role=edit_role
-    # )
-    user = await req.get_user_by_id(user_id=tg_id_personal)
-    if user:
-        try:
-            await message.edit_text(
-                text=f'Для добавления пользователя в список {role},'\
-                    'отправьте ему пригласительную ссылку:\n'\
-                    f'<code>{await create_start_link(bot=message.bot, payload=edit_role+"_"+str(user.user_id), encode=True)}</code>',
-                reply_markup=admin_kb.back_to_main())
-        except:
-            await message.answer(
-                text=f'Для добавления пользователя в список {role},'\
-                    'отправьте ему пригласительную ссылку:\n'\
-                    f'<code>{await create_start_link(bot=message.bot, payload=edit_role+"_"+str(user.user_id), encode=True)}</code>',
-                reply_markup=admin_kb.back_to_main())
-    else:
-        await message.answer(text=f'Пользователь c id={tg_id_personal} в базе данных не найден, попробуйте еще раз:', reply_markup=admin_kb.back_to_main())
+#     tg_id_personal = int(message.text)
+#     data = await state.get_data()
+#     edit_role = data['edit_role']
+#     role = "<b>БАРИСТА</b>"
+#     await state.clear()
+#     # await req.update_user(
+#     #     user_id=tg_id_personal,
+#     #     role=edit_role
+#     # )
+#     user = await req.get_user_by_id(user_id=tg_id_personal)
+#     if user:
+#         try:
+#             await message.edit_text(
+#                 text=f'Для добавления пользователя в список {role},'\
+#                     'отправьте ему пригласительную ссылку:\n'\
+#                     f'<code>{await create_start_link(bot=message.bot, payload=edit_role+"_"+str(user.user_id), encode=True)}</code>',
+#                 reply_markup=admin_kb.back_to_main())
+#         except:
+#             await message.answer(
+#                 text=f'Для добавления пользователя в список {role},'\
+#                     'отправьте ему пригласительную ссылку:\n'\
+#                     f'<code>{await create_start_link(bot=message.bot, payload=edit_role+"_"+str(user.user_id), encode=True)}</code>',
+#                 reply_markup=admin_kb.back_to_main())
+#     else:
+#         await message.answer(text=f'Пользователь c id={tg_id_personal} в базе данных не найден, попробуйте еще раз:', reply_markup=admin_kb.back_to_main())
         
 
 
