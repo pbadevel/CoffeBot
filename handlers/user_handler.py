@@ -8,6 +8,9 @@ from settings import config, lexicon, user_kb, admin_kb, barista_kb
 from utils.ProjectEnums import UserRole
 from utils import ProjectUtils
 
+import logging
+
+
 
 
 
@@ -38,10 +41,13 @@ async def start(message: types.Message, command: CommandObject):
 
     if command.args:
         try:
-            import logging
+            
             logging.info(f'PAYLOAD: {decode_payload(command.args)}')
+            
             action, data = decode_payload(command.args).split('_')
-            user_id = int(data)
+            
+            if action != 'role':
+                user_id = int(data)
         except:
             await message.answer(lexicon.WRONG_QR_TEXT)
             return
