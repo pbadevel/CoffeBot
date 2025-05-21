@@ -51,7 +51,11 @@ async def handle_confirm_a_cup(cb: types.CallbackQuery):
     action = cb.data.split('_')[-2]
     user_id = int(cb.data.split('_')[-1])
     user = await req.get_user_by_id(user_id)
-
+    try:
+        await cb.message.delete()
+    except:
+        pass
+    
     # Add Points
     if action == 'confirm':
         user = await req.update_user(
@@ -59,7 +63,7 @@ async def handle_confirm_a_cup(cb: types.CallbackQuery):
             cups=user.cups + 1
         )
         if user:
-            await cb.message.edit_text(
+            await cb.message.answer(
                 text=lexicon.SUCCESS_ADD_A_CUP_TEXT.format(
                     cups = user.cups
                 ),  reply_markup=user_kb.reply_back_main())
@@ -103,7 +107,7 @@ async def handle_confirm_a_cup(cb: types.CallbackQuery):
             cups=user.cups - 9
         )
         if user:
-            await cb.message.edit_text(
+            await cb.message.answer(
                 text=lexicon.SUCCESS_DEDUCT_A_CUP_TEXT.format(
                     cups = user.cups
                 ), reply_markup=user_kb.reply_back_main()
@@ -123,7 +127,7 @@ async def handle_confirm_a_cup(cb: types.CallbackQuery):
 
     # Cancel
     else:
-        await cb.message.edit_text(lexicon.CANCEL_A_CUP_TEXT.format(
+        await cb.message.answer(lexicon.CANCEL_A_CUP_TEXT.format(
             name="@"+user.username if user.username else user.fullname,
             cups=user.cups
         ), reply_markup=user_kb.reply_back_main())
