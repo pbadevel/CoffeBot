@@ -199,6 +199,32 @@ async def start(message: types.Message, command: CommandObject):
 
 
 
+@router.message(F.text == 'Главное Меню')
+async def main2(message: types.Message):
+    role = UserRole.user
+    
+    if message.from_user.id in config.ADMIN_IDS:
+        role = UserRole.admin
+    
+    user = await req.get_user_by_id(message.from_user.id)
+    
+    if user:
+        if user.role == UserRole.barista:
+            role = user.role
+
+    await req.add_user(
+        user_id = message.from_user.id,
+        username = message.from_user.username,
+        fullname = message.from_user.full_name,
+        role = role
+    )
+
+    if role == UserRole.barista:
+        await message.answer(lexicon.START_BARISTA_TEXT, reply_markup=barista_kb.main())
+    elif role == UserRole.admin:
+        await message.answer(lexicon.START_ADMIN_TEXT, reply_markup=admin_kb.main())
+    else:
+        await message.answer(lexicon.START_USER_TEXT, reply_markup=user_kb.main())
 
 
 

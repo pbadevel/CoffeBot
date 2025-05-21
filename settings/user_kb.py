@@ -1,10 +1,10 @@
 from aiogram.utils.keyboard import (
-    InlineKeyboardBuilder, 
-    ReplyKeyboardBuilder
+    InlineKeyboardBuilder
 )
 from aiogram.types import (
     InlineKeyboardButton,
-    KeyboardButton
+    KeyboardButton,
+    ReplyKeyboardMarkup
 )
 
 from settings import config
@@ -14,11 +14,12 @@ from settings import config
 
 
 def reply_back_main():
-    return ReplyKeyboardBuilder().row(
-        KeyboardButton(text='Главное Меню'),
-        width=1
-    ).as_markup(resize_keyboard=True)
-
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text='Главное Меню')],
+        ],
+        resize_keyboard=True
+        )
 
 def main():
     return InlineKeyboardBuilder().row(
