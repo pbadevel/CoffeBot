@@ -62,7 +62,7 @@ async def handle_confirm_a_cup(cb: types.CallbackQuery):
             await cb.message.edit_text(
                 text=lexicon.SUCCESS_ADD_A_CUP_TEXT.format(
                     cups = user.cups
-                ))
+                ),  reply_markup=user_kb.reply_back_main())
             user_text = lexicon.SUCCESS_ADD_A_CUP_USER_TEXT.format(cups=user.cups, cups_remain=9-user.cups) if user.cups < 10 else\
                     lexicon.ALREADY_10_CUPS_USER_TEXT.format(cups=user.cups)
             await cb.bot.send_message(

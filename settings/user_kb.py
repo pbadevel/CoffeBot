@@ -17,7 +17,7 @@ def reply_back_main():
     return ReplyKeyboardBuilder().row(
         KeyboardButton(text='Главное Меню'),
         width=1
-    ).as_markup()
+    ).as_markup(resize_keyboard=True)
 
 
 def main():
