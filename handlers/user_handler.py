@@ -60,11 +60,11 @@ async def start(message: types.Message, command: CommandObject):
             token = await req.get_token_by_id(int(token_id))
 
             if not token.is_active:
-                await message.answer('Ссылка устарела, по ней может перейти только 1 пользователь!')
+                await message.answer('Ссылка устарела, по ней может перейти только 1 пользователь!', reply_markup=user_kb.reply_back_main())
                 return
 
             if message.from_user.id in config.ADMIN_IDS:
-                await message.answer('Вы являетесь админом, но вы можете считывать QR так же как и <b>БАРИСТА</b>')
+                await message.answer('Вы являетесь админом, но вы можете считывать QR так же как и <b>БАРИСТА</b>', reply_markup=user_kb.reply_back_main())
                 return
 
             if user.role == UserRole.barista:
@@ -104,7 +104,7 @@ async def start(message: types.Message, command: CommandObject):
             [[all_referrals_ids.append(int(j)) for j in i.referral_ids.split(',') if j!=''] for i in await req.get_users() if i.referral_ids]
             
             if referrer.user_id == message.from_user.id:
-                await message.answer(lexicon.CANT_INVITE_YOURSELF_TEXT)
+                await message.answer(lexicon.CANT_INVITE_YOURSELF_TEXT, reply_markup=user_kb.reply_back_main())
                 return
             elif referrer.referral_ids and (message.from_user.id in all_referrals_ids):
                 await message.answer(
@@ -128,7 +128,7 @@ async def start(message: types.Message, command: CommandObject):
                 chat_id = referrer.user_id,
                 text = lexicon.REFERRER_TEXT.format(
                     name="@"+message.from_user.username if message.from_user.username else message.from_user.full_name
-                )
+                ), reply_markup=user_kb.reply_back_main()
             )
 
             # Update new user
@@ -164,7 +164,7 @@ async def start(message: types.Message, command: CommandObject):
         try:
             current_user = await req.get_user_by_id(user_id)
         except:
-            await message.answer(lexicon.NO_SUCH_USER_TEXT)
+            await message.answer(lexicon.NO_SUCH_USER_TEXT, reply_markup=user_kb.reply_back_main())
             return
         
 

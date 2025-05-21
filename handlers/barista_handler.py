@@ -2,7 +2,7 @@ from aiogram import Router, types, F
 
 from database import req
 
-from settings import lexicon, barista_kb
+from settings import lexicon, barista_kb, user_kb
 
 from security import filter
 
@@ -67,7 +67,8 @@ async def handle_confirm_a_cup(cb: types.CallbackQuery):
                     lexicon.ALREADY_10_CUPS_USER_TEXT.format(cups=user.cups)
             await cb.bot.send_message(
                 chat_id=user.user_id,
-                text=user_text
+                text=user_text, 
+                reply_markup=user_kb.reply_back_main()
             )
             if user.referrer_id and user.is_first_cup:
                 referrer = await req.get_user_by_id(user.referrer_id)
@@ -86,7 +87,7 @@ async def handle_confirm_a_cup(cb: types.CallbackQuery):
                         text=lexicon.REFERRER_SUCCESS_TEXT.format(
                             name = "@"+user.username if user.username else user.fullname,
                             cups=referrer.cups
-                        )
+                        ), reply_markup=user_kb.reply_back_main()
                     )
             return
         
@@ -105,13 +106,13 @@ async def handle_confirm_a_cup(cb: types.CallbackQuery):
             await cb.message.edit_text(
                 text=lexicon.SUCCESS_DEDUCT_A_CUP_TEXT.format(
                     cups = user.cups
-                )
+                ), reply_markup=user_kb.reply_back_main()
             )
             await cb.bot.send_message(
                 chat_id=user.user_id,
                 text=lexicon.SUCCESS_DEDUCT_A_CUP_USER_TEXT.format(
                     cups=user.cups
-                )
+                ), reply_markup=user_kb.reply_back_main()
             )
             return
         
@@ -125,4 +126,4 @@ async def handle_confirm_a_cup(cb: types.CallbackQuery):
         await cb.message.edit_text(lexicon.CANCEL_A_CUP_TEXT.format(
             name="@"+user.username if user.username else user.fullname,
             cups=user.cups
-        ))
+        ), reply_markup=user_kb.reply_back_main())
