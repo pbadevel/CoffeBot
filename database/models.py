@@ -42,6 +42,14 @@ class User(Base):
     role: Mapped[ProjectEnums.UserRole] = mapped_column(String(50), nullable=False, default=ProjectEnums.UserRole.user)
     is_first_cup: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
+class Token(Base):
+
+    __tablename__ = 'tokens'
+
+    token_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    creator_tg_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
 
 
 async def create_tables():

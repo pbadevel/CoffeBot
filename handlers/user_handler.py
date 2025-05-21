@@ -22,10 +22,11 @@ router = Router()
 async def start(message: types.Message, command: CommandObject):
     
     role = UserRole.user
-    user = await req.get_user_by_id(message.from_user.id)
     
     if message.from_user.id in config.ADMIN_IDS:
         role = UserRole.admin
+    
+    user = await req.get_user_by_id(message.from_user.id)
     
     if user:
         if user.role == UserRole.barista:
@@ -53,11 +54,21 @@ async def start(message: types.Message, command: CommandObject):
             return
         
         if action == 'role': 
-            role = data
+            role, token_id = data.split(':')
             new_barista = None
 
+            token = await req.get_token_by_id(int(token_id))
+
+            if not token.is_active:
+                await message.answer('Ссылка устарела, по ней может перейти только 1 пользователь!')
+                return
+
             if message.from_user.id in config.ADMIN_IDS:
-                await message.answer('Вы являетесь админом, но вы можете считывать qr так же как и <b>БАРИСТА</b>')
+                await message.answer('Вы являетесь админом, но вы можете считывать QR так же как и <b>БАРИСТА</b>')
+                return
+
+            if user.role == UserRole.barista:
+                await message.answer('Вы уже перешли по ссылке и стали <b>БАРИСТА</b>', reply_markup=barista_kb.main())
                 return
 
             if role == UserRole.barista:
@@ -65,6 +76,11 @@ async def start(message: types.Message, command: CommandObject):
                     user_id=message.from_user.id,
                     role=UserRole.barista
                 )
+
+            # Update token (default is_active = False)
+            await req.update_token(
+                token_id=token.token_id
+            )
             
             if new_barista:
                 for admin_id in config.ADMIN_IDS:
@@ -123,7 +139,7 @@ async def start(message: types.Message, command: CommandObject):
             
             await message.answer(
                 text = lexicon.REFERRAL_TEXT.format(
-                    name = "@"+message.from_user.username if message.from_user.username else message.from_user.full_name
+                    name = "@"+referrer.username if referrer.username else referrer.fullname
                 ),
                 reply_markup = user_kb.main()
             )

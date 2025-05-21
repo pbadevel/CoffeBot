@@ -217,17 +217,25 @@ async def process_personal_add(callback: types.CallbackQuery, state: FSMContext)
     # edit_role = data['edit_role']
     role = "<b>БАРИСТА</b>"
 
+    new_token = await req.add_token(tg_creator_id=callback.from_user.id)
+
+    deep_link = await create_start_link(
+        bot=callback.bot, 
+        payload="role_" + edit_role + ":" + str(new_token.token_id),
+        encode=True
+    )
+
     try:
         await callback.message.edit_text(
             text=f'Для добавления пользователя в список {role},'\
                 'отправьте ему пригласительную ссылку:\n'\
-                f'<code>{await create_start_link(bot=callback.bot, payload="role_"+edit_role, encode=True)}</code>',
+                f'<code>{deep_link}</code>',
             reply_markup=admin_kb.back_to_main())
     except:
         await callback.message.answer(
             text=f'Для добавления пользователя в список {role},'\
                 'отправьте ему пригласительную ссылку:\n'\
-                f'<code>{await create_start_link(bot=callback.bot, payload="role_"+edit_role, encode=True)}</code>',
+                f'<code>{deep_link}</code>',
             reply_markup=admin_kb.back_to_main())
         
 
