@@ -14,10 +14,10 @@ from settings import config
 
 
 def reply_back_main():
-    return ReplyKeyboardBuilder.row(
+    return ReplyKeyboardBuilder().row(
         KeyboardButton(text='Главное Меню'),
         width=1
-    ).as_markup(resize_keyboard=True)
+    ).as_markup()
 
 
 def main():
