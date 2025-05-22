@@ -39,7 +39,7 @@ def confirm_a_cup(user_id):
 
 def choose_cup_action(user_id):
     return InlineKeyboardBuilder().row(
-        InlineKeyboardButton(text='✅ Начислить ✅', callback_data=f'addAcup_confirm_{user_id}'),
+        # InlineKeyboardButton(text='✅ Начислить ✅', callback_data=f'addAcup_confirm_{user_id}'),
         InlineKeyboardButton(text='❌ Списать баллы ❌', callback_data=f'addAcup_deduct_{user_id}'),
         InlineKeyboardButton(text='❌ Отмена ❌', callback_data=f'addAcup_decline_{user_id}'),
         width=1

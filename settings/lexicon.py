@@ -47,7 +47,7 @@ USER_PROFILE_TEXT = '''
 BARISTA_PROFILE_TEXT = '''
 👑 {name} {username}
 
-Ура! Вы бариста в этой Бабл тийне!
+Ура! Вы бариста в этой MENS bubble tea!
 '''
 
 
