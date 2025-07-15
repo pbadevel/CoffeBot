@@ -12,7 +12,7 @@ from security import filter
 
 from database import req
 
-
+import logging as lg
 
 
 
@@ -349,6 +349,8 @@ async def process_del_admin(callback: types.CallbackQuery, state: FSMContext) ->
     if list_personal == []:
         await callback.answer(text=f'Нет пользователей для удаления из списка {role}', show_alert=True)
         return
+    
+    lg.info(f'LEN USERS FOR ROLE:{role} IS {len(list_personal)}')
     
     role = '<b>'+ role +'</b>'
     keyboard = admin_kb.keyboards_del_admin(list_personal, 0, 2, 6)
