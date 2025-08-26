@@ -298,8 +298,11 @@ async def user_handler(cb: types.CallbackQuery):
             )
     # To Delete QR
     elif action == 'backqr':
-        await cb.message.delete()
-
+        try:
+            await cb.message.delete()
+        except: 
+            pass
+    
     # Back Button
     else:
         try:

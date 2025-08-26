@@ -2,7 +2,7 @@ from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.deep_linking import create_start_link
 
-from settings.AdminStates import Personal, Mailing
+from settings.AdminStates import Mailing
 from settings import admin_kb, lexicon
 
 from utils.ProjectEnums import UserRole
@@ -337,7 +337,11 @@ async def process_del_admin(callback: types.CallbackQuery, state: FSMContext) ->
     """
 
     data = await state.get_data()
-    edit_role = data['edit_role']
+    if 'edit_role' in data.keys():
+        edit_role = data['edit_role']
+    else: 
+        edit_role = UserRole.barista
+    
     role = "БАРИСТА"
     
     
@@ -366,10 +370,10 @@ async def process_forward_del_admin(callback: types.CallbackQuery, state: FSMCon
 
     await callback.answer('')
     data = await state.get_data()
-    edit_role = data['edit_role']
+    # edit_role = data['edit_role']
     role = "<b>БАРИСТА</b>"
     
-    list_users = [i for i in await req.get_users() if i.role == edit_role]
+    list_users = [user for user in await req.get_users() if user.role == UserRole.barista]
     list_personal = [[user.user_id, user.username or user.fullname] for user in list_users]
     # :
     #     list_personal.append()
