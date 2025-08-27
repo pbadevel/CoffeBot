@@ -345,7 +345,7 @@ async def process_del_admin(callback: types.CallbackQuery, state: FSMContext) ->
     role = "БАРИСТА"
     
     
-    list_users = [i for i in await req.get_users() if i.role == edit_role]
+    list_users = [i for i in await req.get_users() if i.role == UserRole.barista]
     
     list_personal = [[user.user_id, user.username or user.fullname] for user in list_users]
     
@@ -354,7 +354,7 @@ async def process_del_admin(callback: types.CallbackQuery, state: FSMContext) ->
         await callback.answer(text=f'Нет пользователей для удаления из списка {role}', show_alert=True)
         return
     
-    lg.info(f'LEN USERS FOR ROLE:{role} IS {len(list_personal)}')
+    lg.info(f'LEN USERS FOR ROLE:{role} IS {(i[0] for i in list_personal)}')
     
     role = '<b>'+ role +'</b>'
     keyboard = admin_kb.keyboards_del_admin(list_personal, 0, 2, 6)
@@ -375,6 +375,7 @@ async def process_forward_del_admin(callback: types.CallbackQuery, state: FSMCon
     
     list_users = [user for user in await req.get_users() if user.role == UserRole.barista]
     list_personal = [[user.user_id, user.username or user.fullname] for user in list_users]
+    lg.info('ADMIN_DEL_FORWARD')
     # :
     #     list_personal.append()
     forward = int(callback.data.split('_')[3]) + 1
