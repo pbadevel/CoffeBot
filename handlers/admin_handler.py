@@ -380,6 +380,7 @@ async def process_forward_del_admin(callback: types.CallbackQuery, state: FSMCon
     forward = int(callback.data.split('_')[3]) + 1
     back = forward - 2
     keyboard = admin_kb.keyboards_del_admin(list_personal, back, forward, 2)
+    lg.info(f'f:{forward}, b:{back}, l:{list_personal}')
     try:
         await callback.message.edit_text(text=f'Выберите пользователя, которого вы хотите удалить из {role}',
                                          reply_markup=keyboard)
