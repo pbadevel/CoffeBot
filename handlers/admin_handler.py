@@ -347,14 +347,14 @@ async def process_del_admin(callback: types.CallbackQuery, state: FSMContext) ->
     
     list_users = [i for i in await req.get_users() if i.role == UserRole.barista]
     
-    list_personal = [[user.user_id, user.username or user.fullname] for user in list_users]
+    list_personal = [[user.user_id, user.username if user.username else user.fullname] for user in list_users]
     
     
     if list_personal == []:
         await callback.answer(text=f'Нет пользователей для удаления из списка {role}', show_alert=True)
         return
     
-    lg.info(f'LEN USERS FOR ROLE:{role} IS {[i[0] for i in list_personal]}')
+    lg.info(f'LEN USERS FOR ROLE:{role} IS {[i[0] for i in list_personal]}, users: {list_users}')
     
     role = '<b>'+ role +'</b>'
     keyboard = admin_kb.keyboards_del_admin(list_personal, 0, 2, 6)
@@ -368,14 +368,14 @@ async def process_del_admin(callback: types.CallbackQuery, state: FSMContext) ->
 @router.callback_query(F.data.startswith('admin_del_forward_'))
 async def process_forward_del_admin(callback: types.CallbackQuery, state: FSMContext) -> None:
 
-    await callback.answer('')
+    lg.info('ADMIN_DEL_FORWARD')
+    # await callback.answer('')
     data = await state.get_data()
     # edit_role = data['edit_role']
     role = "<b>БАРИСТА</b>"
     
     list_users = [user for user in await req.get_users() if user.role == UserRole.barista]
     list_personal = [[user.user_id, user.username or user.fullname] for user in list_users]
-    lg.info('ADMIN_DEL_FORWARD')
     # :
     #     list_personal.append()
     forward = int(callback.data.split('_')[3]) + 1
