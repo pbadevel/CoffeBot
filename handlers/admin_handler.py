@@ -24,7 +24,7 @@ router.message.middleware(filter.AlbumMiddleware())
 
 
 
-@router.callback_query(F.data.startswith('admin_'))
+@router.callback_query(F.data.startswith('adminMain_'))
 async def handle_admin(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
@@ -347,8 +347,9 @@ async def process_del_admin(callback: types.CallbackQuery, state: FSMContext) ->
     
     
     list_users = [i for i in await req.get_users() if i.role == UserRole.barista]
-    
-    list_personal = [[user.user_id, user.username if user.username else user.fullname] for user in list_users]
+    list_personal = []
+    for user in list_users:
+        list_personal.append([user.user_id, user.username or user.fullname])
     
     
     if list_personal == []:

@@ -14,15 +14,15 @@ from utils.ProjectEnums import UserRole
 
 def main():
     return InlineKeyboardBuilder().row(
-        InlineKeyboardButton(text='Персонал', callback_data='admin_staff'),
-        InlineKeyboardButton(text='Рассылка', callback_data='admin_send'),
+        InlineKeyboardButton(text='Персонал', callback_data='adminMain_staff'),
+        InlineKeyboardButton(text='Рассылка', callback_data='adminMain_send'),
         width=1
     ).as_markup()
 
 
 def back_to_main():
     return InlineKeyboardBuilder().row(
-        InlineKeyboardButton(text='Назад', callback_data='admin_mainback'),
+        InlineKeyboardButton(text='Назад', callback_data='adminMain_mainback'),
         width=1
     ).as_markup()
 
