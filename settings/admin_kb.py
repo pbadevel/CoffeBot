@@ -71,7 +71,7 @@ def keyboard_select_action() -> InlineKeyboardMarkup:
                                     callback_data='personal_add')
     button_2 = InlineKeyboardButton(text='Разжаловать',
                                     callback_data='personal_delete')
-    button_3 = InlineKeyboardButton(text="Назад", callback_data="admin_mainback")
+    button_3 = InlineKeyboardButton(text="Назад", callback_data="adminMain_mainback")
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[[button_1, button_2], [button_3]])
     return keyboard
@@ -119,7 +119,7 @@ def keyboards_add_admin(list_admin, back, forward, count) -> InlineKeyboardMarku
 
     kb_builder.row(*buttons, width=1)
     kb_builder.row(button_back, button_count, button_next)
-    kb_builder.row(InlineKeyboardButton(text="Назад", callback_data="admin_mainback"), width=1)
+    kb_builder.row(InlineKeyboardButton(text="Назад", callback_data="adminMain_mainback"), width=1)
 
     return kb_builder.as_markup()
 
@@ -175,7 +175,7 @@ def keyboards_del_admin(list_admin, back, forward, count):
 
     kb_builder.row(*buttons, width=1)
     kb_builder.row(button_back, button_count, button_next)
-    kb_builder.row(InlineKeyboardButton(text="Назад", callback_data="admin_mainback"), width=1)
+    kb_builder.row(InlineKeyboardButton(text="Назад", callback_data="adminMain_mainback"), width=1)
 
     return kb_builder.as_markup()
 
