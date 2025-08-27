@@ -49,6 +49,7 @@ async def handle_admin(callback: types.CallbackQuery, state: FSMContext):
     else:
         try:await state.clear()
         except:pass
+        lg.info('Handle Admin back')
              
         try:
             await callback.message.edit_text(text=lexicon.START_ADMIN_TEXT,
